@@ -1,7 +1,7 @@
 /* Pantalla de acceso: pide el código y redirige a la carta */
 (() => {
   const $ = id => document.getElementById(id);
-  const DESTINO = 'index.html';              // página de la carta
+  const DESTINO = 'carta.html';              // página de la carta
   // (día de él + día de ella) × (mes de él + mes de ella) = (9 + 27) × (1 + 9) = 360
   const CODE = String((9 + 27) * (1 + 9));
 
