@@ -1,0 +1,108 @@
+/* ===== Paleta y tipografía ===== */
+:root{
+  --cream:#e6d8c4; --ivory:#f1e6d4; --rose:#c08580; --rose-d:#8f4f4d;
+  --gold:#a07c36; --ink:#261a17; --shadow:rgba(54,36,32,.4);
+  --serif:'Cormorant Garamond',Georgia,serif; --script:'Pinyon Script',cursive;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  font-family:var(--serif); color:var(--ink); overflow:hidden;
+  /* degradado sutil + grano de papel */
+  background:
+    radial-gradient(ellipse at 20% 10%,#f3e6d6 0,transparent 55%),
+    radial-gradient(ellipse at 85% 90%,#e3c3bb 0,transparent 55%),
+    var(--cream);
+}
+body::before{ /* textura de papel */
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .4 0 0 0 0 .35 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+body.reading{overflow-y:auto}
+
+/* ===== Pétalos ===== */
+.petals{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+.petal{position:absolute;top:-6vh;background:linear-gradient(135deg,#d9a39d,var(--rose));
+  border-radius:150% 0 150% 0;opacity:.55;animation:fall linear infinite;will-change:transform}
+@keyframes fall{
+  0%{transform:translate3d(0,0,0) rotate(0)}
+  50%{transform:translate3d(6vw,55vh,0) rotate(200deg)}
+  100%{transform:translate3d(-4vw,112vh,0) rotate(400deg)}
+}
+
+/* ===== Escena del sobre ===== */
+.stage{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.6rem;
+  z-index:2;animation:enter 1.6s cubic-bezier(.2,.7,.2,1) both;transition:opacity .6s .1s,transform .8s cubic-bezier(.6,0,.4,1)}
+@keyframes enter{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+.stage.gone{opacity:0;transform:translateY(40vh) scale(.9);pointer-events:none}
+
+.envelope{
+  position:relative;width:min(86vw,440px);aspect-ratio:3/2;border:0;background:none;cursor:pointer;
+  perspective:1200px;filter:drop-shadow(0 22px 28px var(--shadow));
+  transition:transform .5s cubic-bezier(.2,.7,.2,1);
+  animation:float 5s ease-in-out infinite;
+}
+@keyframes float{50%{transform:translateY(-8px)}}
+.envelope:hover{transform:translateY(-6px) rotate(-.6deg)}
+.envelope:focus-visible{outline:2px solid var(--gold);outline-offset:10px}
+.envelope.open{animation:none;cursor:default}
+.envelope span{position:absolute;display:block}
+.env-back{inset:0;background:#d2aaa1;border-radius:4px}
+.peek{left:7%;right:7%;top:6%;height:88%;background:var(--ivory);border-radius:2px;
+  box-shadow:inset 0 0 0 1px #0001;transition:transform .7s cubic-bezier(.5,0,.2,1) .35s;z-index:2}
+.peek::before,.peek::after{content:"";position:absolute;left:12%;right:12%;height:2px;background:#c4ad94;top:30%;box-shadow:0 12px 0 #c4ad94,0 24px 0 #c4ad94}
+.f{inset:0;z-index:3}
+.f-l{background:#dfbcb3;clip-path:polygon(0 0,52% 52%,0 100%)}
+.f-r{background:#d9b3a9;clip-path:polygon(100% 0,48% 52%,100% 100%)}
+.f-b{background:#e6c8bf;clip-path:polygon(0 100%,50% 48%,100% 100%)}
+.flap{left:0;top:0;width:100%;height:56%;background:linear-gradient(#cfa59b,#d9b4aa);
+  clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;z-index:5;
+  transition:transform .55s cubic-bezier(.5,0,.2,1),z-index 0s .28s}
+.envelope.open .flap{transform:rotateX(180deg);z-index:1}
+.name{left:0;right:0;bottom:11%;text-align:center;font-family:var(--script);font-size:clamp(1.9rem,8vw,2.8rem);color:var(--rose-d);z-index:4}
+.seal{left:50%;top:56%;width:15%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;z-index:6;
+  display:grid;place-items:center;color:#fbeee4;font-size:clamp(1rem,4vw,1.5rem);
+  background:radial-gradient(circle at 35% 30%,#e7c98a,var(--gold) 55%,#9b7c3f);
+  box-shadow:0 3px 8px #0004,inset 0 -3px 6px #0003;transition:transform .5s,opacity .5s}
+.envelope:hover .seal{animation:beat .9s ease-in-out infinite}
+@keyframes beat{50%{transform:scale(1.12)}}
+.envelope.open .seal{transform:scale(0);opacity:0;animation:none}
+.envelope.open .peek{transform:translateY(-62%)}
+.hint{font-family:var(--script);font-size:clamp(1.4rem,5vw,1.9rem);color:var(--rose-d);text-align:center;padding:0 1rem;transition:opacity .5s}
+.hint.hide{opacity:0}
+
+/* ===== La carta ===== */
+.letter-wrap{position:relative;z-index:2;display:none;padding:6vh 4vw 12vh}
+.letter-wrap.show{display:block}
+.paper{
+  max-width:680px;margin:0 auto;padding:clamp(2rem,7vw,4.5rem) clamp(1.4rem,6vw,4rem);
+  background:
+    linear-gradient(transparent 0,transparent 100%),
+    radial-gradient(ellipse at top,#f8f0e2,var(--ivory));
+  border-radius:3px;box-shadow:0 30px 60px var(--shadow),0 0 0 1px #c4a15f33,inset 0 0 0 10px var(--ivory),inset 0 0 0 11px #c4a15f44;
+  clip-path:inset(0 0 100% 0);transform-origin:top;
+}
+.letter-wrap.show .paper{animation:unfold 1.3s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes unfold{
+  0%{clip-path:inset(0 0 calc(100% - 140px) 0);transform:perspective(900px) rotateX(-18deg) scaleY(.4);opacity:.6}
+  100%{clip-path:inset(0 0 0 0);transform:none;opacity:1}
+}
+.to{font-family:var(--script);font-weight:400;font-size:clamp(2.6rem,10vw,3.8rem);color:var(--rose-d);margin-bottom:1.8rem;text-align:center}
+.body p{font-size:clamp(1.28rem,4.3vw,1.5rem);font-weight:500;line-height:1.7;margin-bottom:1.3em;text-wrap:pretty;hyphens:auto}
+.body p:first-child::first-letter{font-family:var(--serif);font-weight:600;font-size:3.6em;float:left;line-height:.8;padding:.06em .1em 0 0;color:var(--gold)}
+.end{font-weight:500;text-align:center;margin-top:3rem;padding-top:2rem;border-top:1px solid #c4a15f55}
+.sign{font-family:var(--script);font-size:clamp(1.7rem,6vw,2.3rem);line-height:1.5;color:var(--rose-d)}
+.heart{margin-top:1.4rem;border:0;background:none;font-size:2.6rem;color:var(--rose);cursor:pointer;transition:transform .3s,color .3s;animation:beat 1.6s ease-in-out infinite}
+.heart:hover{color:var(--rose-d);transform:scale(1.2)}
+.heart:focus-visible{outline:2px solid var(--gold);border-radius:50%}
+.secret{min-height:2.2em;margin-top:.8rem;font-style:italic;font-size:1.25rem;opacity:0;transition:opacity 1s}
+.secret.on{opacity:1}
+.burst{position:fixed;pointer-events:none;z-index:9;font-size:1.4rem;color:var(--rose);animation:burst 1.6s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}
+  .petals{display:none}
+}
+
+.stage[hidden]{display:none}
